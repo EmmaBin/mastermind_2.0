@@ -1,0 +1,11 @@
+mindgame-frontend/node_modules/
+
+
+mindgame-server/venv/
+
+
+.DS_Store
+*.log
+
+
+.env
