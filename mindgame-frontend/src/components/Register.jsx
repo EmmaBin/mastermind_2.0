@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Register() {
     const [registerForm, setRegisterForm] = React.useState({
@@ -82,6 +83,10 @@ export default function Register() {
             />
 
             <button type="submit">Register</button>
+
+            <p>
+                Already Registered? <Link to="/login">Login here</Link>
+            </p>
         </form>
 
 

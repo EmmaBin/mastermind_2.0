@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [loginForm, setLoginForm] = React.useState({
         userEmail: "",
         userPassword: ""
     });
+
+    const navigate = useNavigate();
 
     function handleInput(e) {
         const { name, value } = e.target;
@@ -15,10 +18,39 @@ export default function Login() {
         }));
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         console.log('Login Form Submitted:', loginForm);
-        // API call to submit loginForm data to the backend
+        const payload = {
+            userEmail: loginForm.userEmail,
+            userPassword: loginForm.userPassword
+        }
+        try {
+            const response = await fetch("http://127.0.0.1:5000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            })
+
+            const data = await response.json()
+
+            if (response.ok) {
+                navigate('/game');
+            } else {
+                alert(data.message)
+            }
+
+
+        } catch (error) {
+            console.log(error)
+            alert("Unable to Login. Please try again later.")
+        }
+
+
+
+
     }
 
     return (
