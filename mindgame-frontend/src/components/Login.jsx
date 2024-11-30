@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../UserContext';
 
 export default function Login() {
+    const { setUser } = useUser();
     const [loginForm, setLoginForm] = React.useState({
         userEmail: "",
         userPassword: ""
@@ -37,6 +39,8 @@ export default function Login() {
             const data = await response.json()
 
             if (response.ok) {
+                setUser(data.username);
+                console.log(data.username)
                 navigate('/game');
             } else {
                 alert(data.message)
