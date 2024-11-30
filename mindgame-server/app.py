@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from database import connect_with_db
 from flask_login import login_user, login_required, logout_user, current_user, LoginManager, UserMixin
 import requests
-import generate_random
+from generate_random import generate_random
+from datetime import datetime
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -151,6 +152,23 @@ def start_game():
         print("Error occurred while making the request. Falling back to local generator")
         print(e)
         secret_code = generate_random(counts, min_num, max_num)
+
+    try:
+        connection = connect_with_db()
+        curs = connection.cursor()
+        curs.execute("INSERT INTO Game (secret_code, start_time, user_id) VALUES(%s, NOW(), %s) RETURNING id",
+                     (secret_code, current_user.id))
+        game_id = curs.fetchone()[0]
+        connection.commit()
+        print(f"$$$$$$$${game_id}")
+        return jsonify({"message": "New game created!", "gameId": game_id, "secretCode": secret_code}), 201
+    except Exception as e:
+        print(f"Error saving game to database: {e}")
+        return jsonify({"error": "Unable to create a new game. Please try again later."}), 500
+    finally:
+        if connection:
+            curs.close()
+            connection.close()
 
 
 if __name__ == '__main__':

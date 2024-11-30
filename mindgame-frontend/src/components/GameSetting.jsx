@@ -33,6 +33,7 @@ export default function GameSetting() {
 
             const data = await response.json()
             console.log(data.message)
+            console.log("here is secret code", data.secretCode)
 
 
         } catch (error) {
