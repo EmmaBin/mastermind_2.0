@@ -27,7 +27,7 @@ export default function Login() {
             userPassword: loginForm.userPassword
         }
         try {
-            const response = await fetch("http://127.0.0.1:5000/login", {
+            const response = await fetch("/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

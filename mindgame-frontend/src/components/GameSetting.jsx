@@ -5,7 +5,7 @@ import React from 'react';
 
 export default function GameSetting() {
 
-    const [difficulty, setDifficulty] = React.useState("")
+    const [difficulty, setDifficulty] = React.useState("4")
     const [startNum, setStartNum] = React.useState("0")
     const [endNum, setEndNum] = React.useState("9")
 
@@ -22,7 +22,7 @@ export default function GameSetting() {
             endNum: endNum
         }
         try {
-            const response = await fetch("http://127.0.0.1:5000/new_game", {
+            const response = await fetch("/new_game", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

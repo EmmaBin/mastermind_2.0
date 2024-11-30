@@ -1,15 +1,38 @@
 from flask import Flask, request, jsonify
 from database import connect_with_db
-from flask_cors import CORS
-from flask_login import login_user, login_required, logout_user, current_user, LoginManager
+from flask_login import login_user, login_required, logout_user, current_user, LoginManager, UserMixin
 
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+app.secret_key = "secret"
+
+
+class User(UserMixin):
+    def __init__(self, id, username, email):
+        self.id = id
+        self.username = username
+        self.email = email
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    connection = connect_with_db()
+    cursor = connection.cursor()
+    try:
+
+        cursor.execute(
+            "SELECT id, username, email FROM users WHERE id = %s", (user_id,))
+        user_data = cursor.fetchone()
+        if user_data:
+
+            return User(user_data[0], user_data[1], user_data[2])
+        return None
+    finally:
+        cursor.close()
+        connection.close()
 
 
 @app.route("/")
@@ -35,7 +58,7 @@ def register():
     try:
         connection = connect_with_db()
         curs = connection.cursor()
-        # (user_emai,) is a tuple
+        # (user_email,) is a tuple
         curs.execute("SELECT * FROM users WHERE email = %s", (user_email,))
         existing_user = curs.fetchone()
 
@@ -70,13 +93,17 @@ def login():
     try:
         connection = connect_with_db()
         curs = connection.cursor()
-        curs.execute("SELECT username FROM users WHERE email = %s AND password = %s",
-                     (user_email, user_password))
+        curs.execute(
+            "SELECT id, username, email FROM users WHERE email = %s AND password = %s",
+            (user_email, user_password)
+        )
         user_data = curs.fetchone()
 
         if user_data:
-            login_user(user_data)
-            return jsonify({"username": user_data[0]}), 200
+            user = User(user_data[0], user_data[1],
+                        user_data[2])
+            login_user(user)
+            return jsonify({"username": user.username}), 200
         else:
             return jsonify({"message": "Invalid credentials. Please try again."}), 401
     except Exception as e:
@@ -90,9 +117,17 @@ def login():
 @app.route("/new_game", methods=["POST"])
 @login_required
 def start_game():
+    data = request.json
+    counts = data.get("difficulty")
+    min = data.get("startNum")
+    max = data.get("endNum")
+    print(f"^^^^^{counts}, {min}, {max}")
+    print(f"User ID: {current_user.id}")
+
     # 1. use data to send request to fetch(`https://www.random.org/integers/?num=${counts}&min=0&max=7&col=1&base=10&format=plain&rnd=new`)
     # 2. save data to game table, use current user info
     # 3. use new game id to return back to frontend to create new url
+    # 4. send secret code to frontend
 
 
 if __name__ == '__main__':
