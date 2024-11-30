@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
 from database import connect_with_db
 from flask_login import login_user, login_required, logout_user, current_user, LoginManager, UserMixin
-
+import requests
+import generate_random
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -119,15 +120,37 @@ def login():
 def start_game():
     data = request.json
     counts = data.get("difficulty")
-    min = data.get("startNum")
-    max = data.get("endNum")
-    print(f"^^^^^{counts}, {min}, {max}")
+    start_num = data.get("startNum")
+    end_num = data.get("endNum")
+    min_num = min([start_num, end_num])
+    max_num = max([start_num, end_num])
+    print(f"^^^^^{counts}, {min_num}, {max_num}")
     print(f"User ID: {current_user.id}")
 
     # 1. use data to send request to fetch(`https://www.random.org/integers/?num=${counts}&min=0&max=7&col=1&base=10&format=plain&rnd=new`)
     # 2. save data to game table, use current user info
     # 3. use new game id to return back to frontend to create new url
     # 4. send secret code to frontend
+
+    url = f"https://www.random.org/integers/?num={counts}&min={
+        min_num}&max={max_num}&col=1&base=10&format=plain&rnd=new"
+
+    secret_code = ""
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            print("Request successful!")
+            numbers = response.text.splitlines()
+            secret_code = "".join(numbers)
+            print(f"Generated Secret Code: {secret_code}")
+        else:
+            print("API failed, falling back to local random generator.")
+            secret_code = generate_random(counts, min_num, max_num)
+
+    except Exception as e:
+        print("Error occurred while making the request. Falling back to local generator")
+        print(e)
+        secret_code = generate_random(counts, min_num, max_num)
 
 
 if __name__ == '__main__':
