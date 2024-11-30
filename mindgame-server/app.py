@@ -1,9 +1,15 @@
 from flask import Flask, request, jsonify
 from database import connect_with_db
 from flask_cors import CORS
+from flask_login import login_user, login_required, logout_user, current_user, LoginManager
+
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000"])
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 
 @app.route("/")
@@ -69,6 +75,7 @@ def login():
         user_data = curs.fetchone()
 
         if user_data:
+            login_user(user_data)
             return jsonify({"username": user_data[0]}), 200
         else:
             return jsonify({"message": "Invalid credentials. Please try again."}), 401
@@ -78,6 +85,14 @@ def login():
     finally:
         if connection:
             connection.close()
+
+
+@app.route("/new_game", methods=["POST"])
+@login_required
+def start_game():
+    # 1. use data to send request to fetch(`https://www.random.org/integers/?num=${counts}&min=0&max=7&col=1&base=10&format=plain&rnd=new`)
+    # 2. save data to game table, use current user info
+    # 3. use new game id to return back to frontend to create new url
 
 
 if __name__ == '__main__':
