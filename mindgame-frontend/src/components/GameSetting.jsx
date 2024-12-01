@@ -36,7 +36,7 @@ export default function GameSetting() {
                 localStorage.setItem("secret_code", data.secretCode);
                 localStorage.setItem('difficulty', difficulty);
                 console.log(data.gameId)
-                navigate(`/game/${data.gameId}`);
+                navigate(`/game/${data.gameId}`)
             } else {
                 alert(data.message)
             }
