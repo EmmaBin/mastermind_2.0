@@ -41,7 +41,7 @@ export default function GameSetting() {
                 alert(data.message)
             }
 
-            console.log("here is secret code", data.secretCode)
+
 
 
         } catch (error) {

@@ -20,15 +20,18 @@ export default function NewGame() {
         if (storedDifficulty && storedSecretCode) {
             setDifficulty(storedDifficulty);
             setSecretCode(storedSecretCode);
+            console.log("here is secret code", secretCode);
         }
     }, []);
 
     function handleSubmit(e) {
         e.preventDefault()
+        const formData = new FormData(e.target)
+        const currentGuess = Array.from(formData.values())
+        console.log("current guess", currentGuess)
 
-        const newForm = new FormData(e.target)
-        // using ... turn the iterators into arr
-        const currentGuess = [...newForm.values()]
+
+        //get currentGuess from EachInput component as array
         if (currentGuess.length === difficulty) {
 
             setCurrentRound((prev) => prev + 1)

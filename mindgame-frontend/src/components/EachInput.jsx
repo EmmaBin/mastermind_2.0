@@ -14,7 +14,7 @@ export default function EachInput({ index, difficulty, currentRound, handleSubmi
 
     function handleGuess(e) {
         e.preventDefault();
-        console.log("here are inputs", e.target.value, typeof (e.target.value))
+
         const result = handleSubmit(e);
 
         if (result) {
