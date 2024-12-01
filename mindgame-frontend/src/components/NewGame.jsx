@@ -10,33 +10,30 @@ export default function NewGame() {
     const [difficulty, setDifficulty] = React.useState(null)
     const [stillGoing, setStillGoing] = React.useState(true)
     const [secretCode, setSecretCode] = React.useState("")
-    //check curr_round should <10
+
     //after each guess:1. check against secret code: correct -> end game, redirect, delete storage, send date to backend
     //                                               wrong   -> if still can going, feedback, if can't going, redirect, delete storage, send date to backend
 
     React.useEffect(() => {
         const storedDifficulty = localStorage.getItem('difficulty');
         const storedSecretCode = localStorage.getItem("secret_code")
+
         if (storedDifficulty && storedSecretCode) {
-            setDifficulty(storedDifficulty);
+            setDifficulty(Number(storedDifficulty));
             setSecretCode(storedSecretCode);
             console.log("here is secret code", secretCode);
+            console.log("secret code", typeof secretCode)
         }
-    }, []);
+    }, [secretCode, difficulty]);
 
     function handleSubmit(e) {
         e.preventDefault()
         const formData = new FormData(e.target)
         const currentGuess = Array.from(formData.values())
-        console.log("current guess", currentGuess)
 
-
-        //get currentGuess from EachInput component as array
         if (currentGuess.length === difficulty) {
-
             setCurrentRound((prev) => prev + 1)
             const { correctNumber, correctLocation } = checkAgainstCodes(currentGuess, secretCode)
-            console.log("correct number is", correctNumber, "correct Location", correctLocation)
             checkWinningCondition(correctLocation)
             return ({ correctLocation, correctNumber })
         }

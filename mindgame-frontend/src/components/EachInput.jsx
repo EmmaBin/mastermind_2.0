@@ -18,6 +18,7 @@ export default function EachInput({ index, difficulty, currentRound, handleSubmi
         const result = handleSubmit(e);
 
         if (result) {
+
             setCorrectNumber(result.correctNumber);
             setCorrectLocation(result.correctLocation);
         }
