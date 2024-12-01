@@ -175,6 +175,8 @@ def start_game():
 @login_required
 def record_game_win(game_id):
     data = request.json
+    if not data or "guess" not in data:
+        return jsonify({"error": "Invalid input data"}), 400
     guess = data.get("guess")
     print(f"Game ID: {game_id}")
     print(f"getting frontend winning guesses{guess}")
@@ -188,6 +190,33 @@ def record_game_win(game_id):
         return jsonify({"message": "Winning game data saved!"}), 201
     except Exception as e:
         print(f"Error saving winning situation to database: {e}")
+        return jsonify({"error": "Unable to save to game database. Please try again later."}), 500
+    finally:
+        if connection:
+            curs.close()
+            connection.close()
+
+
+@app.route("/game/<int:game_id>/lose", methods=["POST"])
+@login_required
+def record_game_lose(game_id):
+    data = request.json
+    if not data or "guess" not in data:
+        return jsonify({"error": "Invalid input data"}), 400
+    guess = data.get("guess")
+    print(f"Game ID: {game_id}")
+    print(f"getting frontend lost guesses{guess}")
+    try:
+        connection = connect_with_db()
+        curs = connection.cursor()
+        curs.execute("UPDATE Game  SET end_time= NOW(), win = False, guesses= %s WHERE id = %s",
+                     (guess, game_id))
+        connection.commit()
+        print("%%%%%%%%%%%%%Lose data saved!")
+        return jsonify({"message": "Lost game data saved!"}), 201
+
+    except Exception as e:
+        print(f"Error saving losing situation to database: {e}")
         return jsonify({"error": "Unable to save to game database. Please try again later."}), 500
     finally:
         if connection:

@@ -59,6 +59,7 @@ export default function NewGame() {
                 if (response.ok) {
                     const data = await response.json()
                     console.log("Response from backend (win):", data)
+                    alert("Yay! You won the game!")
                     endGame()
                     setTimeout(() => navigate('/game'), 5000)
                 } else {
