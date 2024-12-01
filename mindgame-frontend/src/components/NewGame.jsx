@@ -5,6 +5,7 @@ import checkAgainstCodes from '../utils/checkAgainstCodes';
 import EachInput from './EachInput';
 import { useParams } from 'react-router-dom';
 import Timer from './Timer';
+import getHints from '../utils/gethints';
 
 export default function NewGame() {
     const navigate = useNavigate();
@@ -13,6 +14,8 @@ export default function NewGame() {
     const [stillGoing, setStillGoing] = React.useState(true)
     const [secretCode, setSecretCode] = React.useState("")
     const [stopTimer, setStopTimer] = React.useState(false)
+    const [showHints, setShowHints] = React.useState(false)
+    const [hintsResult, setHintsResult] = React.useState(null);
     const { gameId } = useParams();
     //after each guess:1. check against secret code: correct -> end game, redirect, delete storage, send date to backend
     //                                               wrong   -> if still can going, feedback, if can't going, redirect, delete storage, send date to backend
@@ -115,11 +118,33 @@ export default function NewGame() {
         setStopTimer(true)
     }
 
+
+    function displayHints() {
+        setShowHints(prev => !prev)
+        if (!showHints) {
+            const secretCode = localStorage.getItem('secret_code').split("");
+            const hints = getHints(secretCode);
+            setHintsResult(hints);
+        } else {
+            setHintsResult(null);
+        }
+
+
+    }
+
     return (
         <div>
             <Timer />
             <br></br>
             <button onClick={() => navigate("/game")}>Go back to game setting to restart game</button>
+            <button onClick={displayHints}>{showHints ? "Hide Hints" : "Hints"}</button>
+            {showHints && hintsResult && (
+                <div>
+                    <p>1. Total: {hintsResult.total}</p>
+                    <p>2. First Number: {hintsResult.firstNumAttri}</p>
+                    <p>3. Last Number: {hintsResult.lastNumAttri}</p>
+                </div>
+            )}
             {
                 Array.from({ length: 10 }, (_, index) => <EachInput
                     key={index}
