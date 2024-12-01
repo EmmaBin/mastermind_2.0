@@ -174,54 +174,35 @@ def start_game():
 @app.route("/game/<int:game_id>/win", methods=["POST"])
 @login_required
 def record_game_win(game_id):
-    data = request.json
-    if not data or "guess" not in data:
-        return jsonify({"error": "Invalid input data"}), 400
-    guess = data.get("guess")
-    print(f"Game ID: {game_id}")
-    print(f"getting frontend winning guesses{guess}")
-    try:
-        connection = connect_with_db()
-        curs = connection.cursor()
-        curs.execute("UPDATE Game  SET end_time= NOW(), win = True, guesses= %s WHERE id = %s",
-                     (guess, game_id))
-        connection.commit()
-        print("%%%%%%%%%%%%%winning data saved!")
-        return jsonify({"message": "Winning game data saved!"}), 201
-    except Exception as e:
-        print(f"Error saving winning situation to database: {e}")
-        return jsonify({"error": "Unable to save to game database. Please try again later."}), 500
-    finally:
-        if connection:
-            curs.close()
-            connection.close()
+    return record_game_result(game_id, True)
 
 
 @app.route("/game/<int:game_id>/lose", methods=["POST"])
 @login_required
 def record_game_lose(game_id):
+    return record_game_result(game_id, False)
+
+
+def record_game_result(game_id, win_status):
     data = request.json
     if not data or "guess" not in data:
         return jsonify({"error": "Invalid input data"}), 400
-    guess = data.get("guess")
-    print(f"Game ID: {game_id}")
-    print(f"getting frontend lost guesses{guess}")
-    try:
-        connection = connect_with_db()
-        curs = connection.cursor()
-        curs.execute("UPDATE Game  SET end_time= NOW(), win = False, guesses= %s WHERE id = %s",
-                     (guess, game_id))
-        connection.commit()
-        print("%%%%%%%%%%%%%Lose data saved!")
-        return jsonify({"message": "Lost game data saved!"}), 201
 
+    guess = data["guess"]
+
+    try:
+        with connect_with_db() as connection:
+            with connection.cursor() as curs:
+                curs.execute(
+                    "UPDATE Game SET end_time=NOW(), win=%s, guesses=%s WHERE id=%s",
+                    (win_status, guess, game_id)
+                )
+                connection.commit()
+                message = "Winning game data saved!" if win_status else "Lost game data saved!"
+                return jsonify({"message": message}), 201
     except Exception as e:
-        print(f"Error saving losing situation to database: {e}")
+        print(f"Error saving game data to database: {e}")
         return jsonify({"error": "Unable to save to game database. Please try again later."}), 500
-    finally:
-        if connection:
-            curs.close()
-            connection.close()
 
 
 if __name__ == '__main__':
