@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import checkAgainstCodes from '../utils/checkAgainstCodes';
 import EachInput from './EachInput';
 import { useParams } from 'react-router-dom';
+import Timer from './Timer';
 
 export default function NewGame() {
     const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function NewGame() {
     const [difficulty, setDifficulty] = React.useState(null)
     const [stillGoing, setStillGoing] = React.useState(true)
     const [secretCode, setSecretCode] = React.useState("")
+    const [stopTimer, setStopTimer] = React.useState(false)
     const { gameId } = useParams();
     //after each guess:1. check against secret code: correct -> end game, redirect, delete storage, send date to backend
     //                                               wrong   -> if still can going, feedback, if can't going, redirect, delete storage, send date to backend
@@ -110,10 +112,13 @@ export default function NewGame() {
         setCurrentRound(-1)
         localStorage.removeItem('secret_code');
         localStorage.removeItem('difficulty');
+        setStopTimer(true)
     }
 
     return (
         <div>
+            <Timer />
+            <br></br>
             <button onClick={() => navigate("/game")}>Go back to game setting to restart game</button>
             {
                 Array.from({ length: 10 }, (_, index) => <EachInput
