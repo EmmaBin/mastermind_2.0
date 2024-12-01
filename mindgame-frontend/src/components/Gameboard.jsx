@@ -4,7 +4,7 @@ import GameSetting from './GameSetting';
 
 
 
-export default function Game() {
+export default function GameBoard() {
     const [username, setUsername] = React.useState("");
 
     React.useEffect(() => {

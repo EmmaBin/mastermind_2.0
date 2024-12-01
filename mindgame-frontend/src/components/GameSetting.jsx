@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 //a form to collect game setting:1. difficulty level 2. number range
 //send form data to backend /newgame
@@ -9,12 +10,11 @@ export default function GameSetting() {
     const [startNum, setStartNum] = React.useState("0")
     const [endNum, setEndNum] = React.useState("9")
 
+    const navigate = useNavigate();
+
     async function startGame(e) {
         console.log("startGame function triggered");
         e.preventDefault();
-        console.log("Difficulty:", difficulty);
-        console.log("Start Number:", startNum);
-        console.log("End Number:", endNum);
 
         const gameSetting = {
             difficulty: difficulty,
@@ -32,7 +32,15 @@ export default function GameSetting() {
             })
 
             const data = await response.json()
-            console.log(data.message)
+            if (response.ok) {
+                localStorage.setItem("secret_code", data.secretCode);
+                localStorage.setItem('difficulty', difficulty);
+                console.log(data.gameId)
+                navigate(`/game/${data.gameId}`);
+            } else {
+                alert(data.message)
+            }
+
             console.log("here is secret code", data.secretCode)
 
 
