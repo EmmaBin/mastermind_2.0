@@ -171,5 +171,14 @@ def start_game():
             connection.close()
 
 
+@app.route("/game/<int:game_id>/win", methods=["POST"])
+@login_required
+def record_game_win(game_id):
+    data = request.json
+    guess = data.get("guess")
+    print(f"Game ID: {game_id}")
+    print(f"getting frontend winning guesses{guess}")
+
+
 if __name__ == '__main__':
     app.run(debug=True)

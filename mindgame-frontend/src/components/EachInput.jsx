@@ -40,3 +40,4 @@ export default function EachInput({ index, difficulty, currentRound, handleSubmi
         </div >
     )
 }
+
