@@ -178,6 +178,21 @@ def record_game_win(game_id):
     guess = data.get("guess")
     print(f"Game ID: {game_id}")
     print(f"getting frontend winning guesses{guess}")
+    try:
+        connection = connect_with_db()
+        curs = connection.cursor()
+        curs.execute("UPDATE Game  SET end_time= NOW(), win = True, guesses= %s WHERE id = %s",
+                     (guess, game_id))
+        connection.commit()
+        print("%%%%%%%%%%%%%winning data saved!")
+        return jsonify({"message": "Winning game data saved!"}), 201
+    except Exception as e:
+        print(f"Error saving winning situation to database: {e}")
+        return jsonify({"error": "Unable to save to game database. Please try again later."}), 500
+    finally:
+        if connection:
+            curs.close()
+            connection.close()
 
 
 if __name__ == '__main__':
