@@ -37,11 +37,6 @@ def load_user(user_id):
         connection.close()
 
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
-
-
 @app.route("/register", methods=["POST"])
 def register():
     # parse json data into python dictionary
@@ -60,14 +55,20 @@ def register():
     try:
         connection = connect_with_db()
         curs = connection.cursor()
-        # (user_email,) is a tuple
+
+        # check if the email already exists
         curs.execute("SELECT * FROM users WHERE email = %s", (user_email,))
-        existing_user = curs.fetchone()
+        existing_email = curs.fetchone()
+        if existing_email:
+            return jsonify({"error": "Email already exists. Please log in or use a different email."}), 409
 
-        # case 2, email already exist, prompt user to login
-        if existing_user:
-            return jsonify({"error": "Email already exists. Please log in. Or register using a different email"}), 409
+        # check if the username already exists
+        curs.execute("SELECT * FROM users WHERE username = %s", (user_name,))
+        existing_username = curs.fetchone()
+        if existing_username:
+            return jsonify({"error": "Username already exists. Please choose a different username."}), 409
 
+        # insert new user
         curs.execute("INSERT INTO users (username, password, email) VALUES (%s, %s, %s)",
                      (user_name, user_password, user_email))
 

@@ -6,6 +6,7 @@ import GameSetting from './GameSetting';
 
 export default function GameBoard() {
     const [username, setUsername] = React.useState("");
+    const [showRegister, setShowRegister] = React.useState(false)
 
     React.useEffect(() => {
         const storedUsername = localStorage.getItem("username");
@@ -15,6 +16,7 @@ export default function GameBoard() {
     return (
         <div>
             <h1>Welcome to the Game, {username}!</h1>
+
             <GameRule />
             <GameSetting />
 
