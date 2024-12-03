@@ -171,9 +171,10 @@ export default function NewGame() {
     function endGame() {
         setStillGoing(false)
         setCurrentRound(-1)
+        setStopTimer(true)
         localStorage.removeItem('secret_code');
         localStorage.removeItem('difficulty');
-        setStopTimer(true)
+
     }
 
 
