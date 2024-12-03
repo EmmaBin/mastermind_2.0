@@ -40,6 +40,65 @@ Contains files related to the backend of the web application.
 - `scripts/init_db.sql`SQL tables for the database
 
 ---
+
+## How to Run Locally
+The game is using React for Front End and Python for backend.
+Clone the project
+
+```bash
+  git clone https://github.com/EmmaBin/mastermind_2.0.git
+```
+
+Go to the Backend Directory
+
+```bash
+  cd mindgame-server
+```
+To install virtualenv
+```
+  pip install virtualenv
+```
+
+Create and activate virtual environment (virtualenv Windows)
+
+```bash
+  virtualenv venv
+  source venv/Scripts/activate
+```
+Create and activate virtual environment (virtualenv Linux)
+
+```bash
+  virtualenv venv
+  source venv/bin/activate
+```
+Install requirements
+```bash
+  pip install -r requirements.txt
+```
+Next create a .env file in the mindgame-server directory. It should contain the following information.
+```bash
+  DB_NAME="mindgame"
+  DB_USER="yourname"
+  DB_PASSWORD="yourpassword" 
+  DB_HOST="localhost" 
+  DB_PORT="5432"
+```
+Create database
+```bash
+  CREATE DATABASE mindgame;
+```
+Run the Initialization Script: Use the psql command-line tool to run the schema initialization script (scripts/init_db.sql):
+```bash
+  psql -U <DB_USER> -d mindgame -f scripts/init_db.sql
+
+```
+Replace <DB_USER> with your PostgreSQL username. This script will create the required tables (users, Game, GameGuesses).
+
+Then, you can have backend running.
+```bash
+  python app.py
+
+
 ## Technologies Used
 <ul>
 <li>Python</li>
