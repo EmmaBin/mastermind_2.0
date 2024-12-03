@@ -8,16 +8,6 @@ MindGame 2.0 is a number guessing game where players must guess a sequence of ra
 - The numbers may repeat in the sequence.
 - Feedback is provided after each guess to indicate correctness.
 - The game ends if the user guesses the sequence or exhausts all attempts.
-
----
-## Sample Play
-Example:  
-<img src="images/home.png"/>
-<img src="images/setting.png"/>
-<img src="images/game_play.png"/>
-
----
-
 ## Technologies Used
 <ul>
 <li>Python</li>
@@ -87,3 +77,27 @@ Example:
 </tr>
 </tbody>
 </table>
+---
+
+### Extensions
+- Users can customize the number of random numbers to guess: **4, 5, or 6**.
+- Flexible range for generated random numbers: **from 0 to 9**.
+- A timer is available for each game.
+- **Hints** can be displayed during gameplay.
+- Supports **multi-player functionality**, allowing users to:
+  - Log in with individual accounts.
+  - Play their own games.
+  - Track progress and achievements.
+- User history tracking, including:
+  - **Least time spent** 
+  - **Most wins** 
+  - **Fewest guesses** 
+
+## Sample Play
+Example:  
+<img src="images/home.png"/>
+<img src="images/setting.png"/>
+<img src="images/game_play.png"/>
+
+---
+
