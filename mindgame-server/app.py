@@ -46,7 +46,7 @@ def register():
     user_email = data.get("userEmail")
     print(f"**********{user_email}")
 
-    # case 1, inputs are invalid
+    # inputs are invalid
     if len(user_name) > 50 or len(user_email) > 100 or len(user_password) > 25:
         return jsonify({"error": "Input exceeds maximum allowed length"}), 400
 
@@ -204,6 +204,69 @@ def record_game_result(game_id, win_status):
     except Exception as e:
         print(f"Error saving game data to database: {e}")
         return jsonify({"error": "Unable to save to game database. Please try again later."}), 500
+
+
+@app.route('/halloffame', methods=["GET"])
+def get_names_based_on_criteria():
+    selection = request.args.get("criteria", "mostWins")
+
+    try:
+        connection = connect_with_db()
+        curs = connection.cursor()
+
+        if selection == "mostWins":
+            query = """
+                SELECT username, COUNT(*) AS wins, TO_CHAR(MIN(end_time - start_time), 'HH24:MI:SS') AS time_spent, MIN(guesses) AS guesses
+                FROM users
+                JOIN Game ON users.id = Game.user_id
+                WHERE Game.win = True
+                GROUP BY username
+                ORDER BY wins DESC
+                LIMIT 3;
+            """
+        elif selection == "leastTime":
+            query = """
+                SELECT username, COUNT(*) AS wins, TO_CHAR(MIN(end_time - start_time), 'HH24:MI:SS') AS time_spent, MIN(guesses) AS guesses
+                FROM users
+                JOIN Game ON users.id = Game.user_id
+                WHERE Game.win = True AND end_time IS NOT NULL
+                GROUP BY username
+                ORDER BY MIN(EXTRACT(EPOCH FROM end_time - start_time)) ASC
+                LIMIT 3;
+            """
+
+        elif selection == "leastGuess":
+            query = """
+                SELECT username, COUNT(*) AS wins, TO_CHAR(MIN(end_time - start_time), 'HH24:MI:SS') AS time_spent, MIN(guesses) AS guesses
+                FROM users
+                JOIN Game ON users.id = Game.user_id
+                WHERE Game.win = True AND end_time IS NOT NULL
+                GROUP BY username
+                ORDER BY MIN(guesses) ASC
+                LIMIT 3;
+            """
+
+        curs.execute(query)
+        results = curs.fetchall()
+
+        if not results:
+            return jsonify({"message": "No data available for the selected criteria."}), 200
+
+            # Convert results to a list of dictionaries
+        result_list = []
+        for row in results:
+            result_list.append(
+                {"username": row[0], "wins": row[1], "time_spent": row[2], "guesses": row[3]})
+
+        return jsonify(result_list), 200
+
+    except Exception as e:
+        print(f"Error fetching Hall of Fame: {e}")
+        return jsonify({"error": "Unable to fetch Hall of Fame"}), 500
+    finally:
+        if connection:
+            curs.close()
+            connection.close()
 
 
 if __name__ == '__main__':
