@@ -97,8 +97,32 @@ Replace <DB_USER> with your PostgreSQL username. This script will create the req
 Then, you can have backend running.
 ```bash
   python app.py
+```
 
+Go to the Frontend Directory
+```bash
+  cd mindgame-frontend
+```
 
+Install Node.js
+Verify the installation, run:
+```bash
+node -v
+npm -v
+```
+
+Install Dependencies
+
+```bash
+  npm install
+```
+
+Start the Development Server
+```bash
+  npm start
+```
+The app will be served on http://localhost:3000 (default port).
+---
 ## Technologies Used
 <ul>
 <li>Python</li>
