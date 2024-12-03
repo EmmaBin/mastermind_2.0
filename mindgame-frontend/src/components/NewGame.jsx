@@ -9,22 +9,20 @@ import getHints from '../utils/gethints';
 
 export default function NewGame() {
     const navigate = useNavigate();
-    const [currentRound, setCurrentRound] = React.useState(0)
-    const [difficulty, setDifficulty] = React.useState(null)
-    const [stillGoing, setStillGoing] = React.useState(true)
-    const [secretCode, setSecretCode] = React.useState("")
-    const [stopTimer, setStopTimer] = React.useState(false)
-    const [showHints, setShowHints] = React.useState(false)
+    const [currentRound, setCurrentRound] = React.useState(null);
+    const [difficulty, setDifficulty] = React.useState(null);
+    const [stillGoing, setStillGoing] = React.useState(true);
+    const [secretCode, setSecretCode] = React.useState("");
+    const [stopTimer, setStopTimer] = React.useState(false);
+    const [showHints, setShowHints] = React.useState(false);
     const [hintsResult, setHintsResult] = React.useState(null);
-    const [gameHistory, setGameHistory] = React.useState([])
+    const [gameHistory, setGameHistory] = React.useState([]);
     const { gameId } = useParams();
-
-    //after each guess:1. check against secret code: correct -> end game, redirect, delete storage, send date to backend
-    //                                               wrong   -> if still can going, feedback, if can't going, redirect, delete storage, send date to backend
 
     React.useEffect(() => {
         const storedDifficulty = localStorage.getItem('difficulty');
         const storedSecretCode = localStorage.getItem("secret_code")
+        const storedRound = localStorage.getItem("currentRound");
 
         if (storedDifficulty && storedSecretCode) {
             setDifficulty(Number(storedDifficulty));
@@ -32,15 +30,17 @@ export default function NewGame() {
             console.log("here is secret code", secretCode);
         }
 
-    }, []);
+        if (storedRound !== null) {
+            setCurrentRound(Number(storedRound)); // Use stored round value
+        } else {
+            setCurrentRound(0); // Default to 0 if no value is stored
+        }
 
-    React.useEffect(() => {
         const fetchGameHistory = async () => {
             try {
                 const response = await fetch(`/game/${gameId}/guesses`, { method: 'GET' });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log("Game history fetched:", data);
                     setGameHistory(data);
                 } else {
                     console.error("Failed to fetch game history:", response.status);
@@ -51,9 +51,13 @@ export default function NewGame() {
         };
 
         fetchGameHistory();
-    }, []); // Add gameId as a dependency
+    }, [gameId]);
 
-
+    React.useEffect(() => {
+        if (currentRound !== null) {
+            localStorage.setItem('currentRound', currentRound);
+        }
+    }, [currentRound]);
 
     async function saveGuessToDB(guess, correctNumber, correctLocation) {
         const payload = {
@@ -78,68 +82,59 @@ export default function NewGame() {
     }
 
     function handleSubmit(e) {
-        e.preventDefault()
-        const formData = new FormData(e.target)
-        const currentGuess = Array.from(formData.values())
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const currentGuess = Array.from(formData.values());
 
         if (currentGuess.length === difficulty) {
-            setCurrentRound((prev) => prev + 1)
-            const { correctNumber, correctLocation } = checkAgainstCodes(currentGuess, secretCode)
-            //send each uer guess to server, and read user's guess, correctNumber, correctLocation to display in the table
+            const updatedRound = currentRound + 1;
+            setCurrentRound(updatedRound);
+
+            const { correctNumber, correctLocation } = checkAgainstCodes(currentGuess, secretCode);
+
             const newGuess = {
                 guess: currentGuess.join(""),
                 correct_numbers: correctNumber,
                 correct_locations: correctLocation,
             };
-            setGameHistory((prev) => [
-                ...prev,
-                newGuess,
-            ]);
 
+            setGameHistory((prev) => [...prev, newGuess]);
             saveGuessToDB(currentGuess, correctNumber, correctLocation);
-            checkWinningCondition(correctLocation)
-
+            checkWinningCondition(correctLocation, updatedRound);
         }
     }
 
-    async function checkWinningCondition(correctLocation) {
+    async function checkWinningCondition(correctLocation, updatedRound) {
         if (correctLocation === difficulty) {
             const gameSituation = {
                 win: true,
-                guess: currentRound + 1
-            }
-            console.log("Payload being sent to backend - win:", gameSituation);
+                guess: updatedRound,
+            };
 
             try {
                 const response = await fetch(`/game/${gameId}/win`, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(gameSituation)
+                    body: JSON.stringify(gameSituation),
                 });
 
                 if (response.ok) {
-                    const data = await response.json()
-                    console.log("Response from backend (win):", data)
-                    alert("Yay! You won the game!")
-                    endGame()
-                    setTimeout(() => navigate('/game'), 5000)
+                    alert("Yay! You won the game!");
+                    endGame();
+                    setTimeout(() => navigate('/game'), 5000);
                 } else {
-                    console.error("Error from backend (win):", response.status);
                     alert("Failed to update game state on the server. Please try again.");
                 }
             } catch (error) {
-                console.error("Network error (win):", error);
                 alert("Network error occurred. Please check your connection and try again.");
             }
-
-        } else if (currentRound + 1 >= 10) {
+        } else if (updatedRound >= 10) {
             const gameSituation = {
                 win: false,
-                guess: currentRound + 1,
+                guess: updatedRound,
             };
-            console.log("Payload being sent to backend (lose):", gameSituation);
 
             try {
                 const response = await fetch(`/game/${gameId}/lose`, {
@@ -151,56 +146,60 @@ export default function NewGame() {
                 });
 
                 if (response.ok) {
-                    const data = await response.json()
-                    console.log("Response from backend (lose):", data);
-                    alert("Game Over! You've reached the maximum number of guesses.")
-                    endGame()
+                    alert("Game Over! You've reached the maximum number of guesses.");
+                    endGame();
                     setTimeout(() => navigate('/game'), 5000);
                 } else {
-                    console.error("Error from backend (lose):", response.status, response.statusText)
-                    alert("Failed to update game state on the server. Please try again.")
+                    alert("Failed to update game state on the server. Please try again.");
                 }
             } catch (error) {
-                console.error("Network error (lose):", error);
-                alert("Network error occurred. Please check your connection and try again.")
+                alert("Network error occurred. Please check your connection and try again.");
             }
         }
-
     }
 
     function endGame() {
-        setStopTimer(true)
-        setStillGoing(false)
-        setCurrentRound(-1)
+        setStopTimer(true);
+        setStillGoing(false);
+        setCurrentRound(0);
         localStorage.removeItem('secret_code');
         localStorage.removeItem('difficulty');
         localStorage.removeItem('elapsedTime');
-
+        localStorage.removeItem('currentRound');
     }
 
-
     function displayHints() {
-        setShowHints(prev => !prev)
-        if (!showHints) {
+        const shouldShowHints = !showHints;
+        setShowHints(shouldShowHints);
+
+        if (shouldShowHints) {
             const secretCode = localStorage.getItem('secret_code').split("");
             const hints = getHints(secretCode);
             setHintsResult(hints);
         } else {
             setHintsResult(null);
         }
-
     }
-
 
     return (
         <div>
-            <Timer />
-            <br></br>
-            <button onClick={() => {
-                navigate('/game');
-            }} className='new-game-btn'>Back to game setting to restart game</button>
-            <br></br>
-            <button className='new-game-btn' onClick={displayHints}>{showHints ? "Hide Hints" : "Hints"}</button>
+            <Timer stopTimer={stopTimer} reset={currentRound === 0} />
+            {currentRound !== null ? (
+                <p>
+                    Remaining {10 - currentRound}{" "}
+                    {10 - currentRound === 1 ? "round" : "rounds"}
+                </p>
+            ) : (
+                <p>Loading round data...</p>
+            )}
+            <br />
+            <button onClick={() => navigate('/game')} className='new-game-btn'>
+                Back to game setting to restart game
+            </button>
+            <br />
+            <button className='new-game-btn' onClick={displayHints}>
+                {showHints ? "Hide Hints" : "Hints"}
+            </button>
             {showHints && hintsResult && (
                 <div>
                     <p>1. Total: {hintsResult.total}</p>
@@ -211,7 +210,8 @@ export default function NewGame() {
             <EachInput
                 difficulty={difficulty}
                 handleSubmit={handleSubmit}
-                stillGoing={stillGoing} />
+                stillGoing={stillGoing}
+            />
             <div className="game-history-container">
                 {gameHistory.length > 0 ? (
                     <table className="game-history-table">
@@ -220,7 +220,6 @@ export default function NewGame() {
                                 <th>Your guess</th>
                                 <th>Correct Location</th>
                                 <th>Correct Number</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -232,22 +231,11 @@ export default function NewGame() {
                                 </tr>
                             ))}
                         </tbody>
-
                     </table>
                 ) : (
                     <p>Your game history will be displayed here!</p>
                 )}
             </div>
-
-
-
-
-
-
-
-        </div >
+        </div>
     );
 }
-
-
-
