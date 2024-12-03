@@ -33,6 +33,34 @@ export default function Home() {
                 <option value="leastTime">Least time spent</option>
                 <option value="leastGuess">Least Guesses</option>
             </select>
+
+
+            {hallOfFame.length > 0 ? (
+                <table border="1" style={{ borderCollapse: "collapse", width: "100%", marginTop: "20px" }}>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Wins</th>
+                            <th>Time Spent</th>
+                            <th>Guesses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {hallOfFame.map((entry, i) => (
+                            <tr key={i}>
+                                <td>{entry.username}</td>
+                                <td>{entry.wins}</td>
+                                <td>{entry.time_spent}</td>
+                                <td>{entry.guesses}</td>
+                            </tr>
+
+                        ))}
+                    </tbody>
+
+                </table>
+            ) : (
+                <p>No data available at this time. Start playing the game to be the first name to appear here!</p>
+            )}
         </div>
     )
 }

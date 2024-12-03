@@ -14,3 +14,12 @@ CREATE TABLE Game (
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE GameGuesses (
+    id SERIAL PRIMARY KEY,
+    game_id INT NOT NULL,
+    guess VARCHAR(10) NOT NULL,
+    correct_numbers INT NOT NULL,
+    correct_locations INT NOT NULL,
+    FOREIGN KEY (game_id) REFERENCES Game(id) ON DELETE CASCADE
+);

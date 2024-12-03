@@ -145,15 +145,11 @@ export default function NewGame() {
                     <p>3. Last Number: {hintsResult.lastNumAttri}</p>
                 </div>
             )}
-            {
-                Array.from({ length: 10 }, (_, index) => <EachInput
-                    key={index}
-                    difficulty={difficulty}
-                    currentRound={currentRound}
-                    handleSubmit={handleSubmit}
-                    index={index}
-                    stillGoing={stillGoing} />)
-            }
+            <EachInput
+                difficulty={difficulty}
+                handleSubmit={handleSubmit}
+                stillGoing={stillGoing} />
+
 
 
         </div>
