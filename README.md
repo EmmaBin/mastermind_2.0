@@ -4,7 +4,7 @@
 MindGame 2.0 is a number guessing game where players must guess a sequence of random numbers within 10 attempts. The game generates a sequence of random numbers, which can repeat, and challenges the player to guess the correct numbers and their positions.
 
 ---
-### Code Structure
+## Code Structure
 I built this game as a Full-Stack Web Application utilizing the Model-View-Controller architecture.
 The following sections describe the main directories and their responsibilities.
 
@@ -17,7 +17,7 @@ Contains files related to the frontend of the web application.
 - Main Features:
   - React-based components for dynamic rendering.
   - Communication with the backend via RESTful APIs.
-  - State management to ensure responsiveness during game play.
+  - State management to ensure responsiveness during gameplay.
 
 ## mindgame-server
 
@@ -81,14 +81,13 @@ Create database
 ```bash
   CREATE DATABASE mindgame;
 ```
-Run the Initialization Script: Use the psql command-line tool to run the schema initialization script (scripts/init_db.sql):
+Run the Initialization Script: Replace <DB_USER> with your PostgreSQL username.
 ```bash
   psql -U <DB_USER> -d mindgame -f scripts/init_db.sql
 
 ```
-Replace <DB_USER> with your PostgreSQL username. This script will create the required tables (users, Game, GameGuesses).
 
-Then, you can have backend running.
+Start the backend server:
 ```bash
   python app.py
 ```
@@ -98,8 +97,7 @@ Go to the Frontend Directory. The app will be served on http://localhost:3000 (d
   cd mindgame-frontend
 ```
 
-Install Node.js
-Verify the installation, run:
+Install Node.js. Verify the installation, run:
 ```bash
 node -v
 npm -v
