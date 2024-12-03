@@ -18,11 +18,12 @@ The following sections describe the main directories and their responsibilities.
 
 Contains files related to the frontend of the web application.
 
-- **Views**: The `src` folder contains React components and `App.css` for styling. These are bundled using Webpack and transpiled with Babel to ensure compatibility across various browsers before being served to the client.
-- **Main Features**:
+### **Views**
+ The `src` folder contains React components and `App.css` for styling. These are bundled using Webpack and transpiled with Babel to ensure compatibility across various browsers before being served to the client.
+- Main Features:
   - React-based components for dynamic rendering.
   - Communication with the backend via RESTful APIs.
-  - State management to ensure responsiveness during gameplay.
+  - State management to ensure responsiveness during game play.
 
 ## mindgame-server
 
@@ -33,7 +34,7 @@ Contains files related to the backend of the web application.
   - Functions in this file call **models** to interact with the database and transform data before sending a response to the client.
 
 ### **Database**
-- `database.py`: Handles the connection to the **PostgreSQL** database using `psycopg2`.
+- `database.py`: Handles the connection to the PostgreSQL database using `psycopg2`.
 
 ### **Models**
 - `scripts/init_db.sql`SQL tables for the database
