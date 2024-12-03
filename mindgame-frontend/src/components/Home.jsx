@@ -36,7 +36,7 @@ export default function Home() {
 
 
             {hallOfFame.length > 0 ? (
-                <table border="1" style={{ borderCollapse: "collapse", width: "100%", marginTop: "20px" }}>
+                <table border="1" style={{ borderCollapse: "collapse", width: "50%", marginTop: "20px" }}>
                     <thead>
                         <tr>
                             <th>Username</th>

@@ -269,5 +269,76 @@ def get_names_based_on_criteria():
             connection.close()
 
 
+@app.route('/game/<int:game_id>/guesses', methods=["POST"])
+@login_required
+def save_guess(game_id):
+    data = request.json
+
+    guess = data.get("guess")
+    correct_numbers = data.get("correctNumbers")
+    correct_locations = data.get("correctLocations")
+
+    if not guess or correct_numbers is None or correct_locations is None:
+        return jsonify({"error": "Invalid input data"}), 400
+
+    try:
+        connection = connect_with_db()
+        curs = connection.cursor()
+
+        query = """
+            INSERT INTO GameGuesses (game_id, guess, correct_numbers, correct_locations)
+            VALUES (%s, %s, %s, %s)
+        """
+        curs.execute(
+            query, (game_id, guess, correct_numbers, correct_locations))
+        connection.commit()
+
+        return jsonify({"message": "Guess saved successfully!"}), 201
+    except Exception as e:
+        print(f"Error saving guess: {e}")
+        return jsonify({"error": "Failed to save guess"}), 500
+    finally:
+        if connection:
+            curs.close()
+            connection.close()
+
+
+@app.route('/game/<int:game_id>/guesses', methods=["GET"])
+@login_required
+def get_guesses(game_id):
+    try:
+        connection = connect_with_db()
+        curs = connection.cursor()
+
+        query = """
+            SELECT guess, correct_numbers, correct_locations
+            FROM GameGuesses
+            WHERE game_id = %s
+            ORDER BY id ASC
+        """
+        curs.execute(query, (game_id,))
+        results = curs.fetchall()
+
+        guesses = []
+
+        for row in results:
+            guesses.append(
+                {
+                    "guess": row[0],
+                    "correct_numbers": row[1],
+                    "correct_locations": row[2],
+                }
+            )
+
+        return jsonify(guesses), 200
+    except Exception as e:
+        print(f"Error fetching guesses: {e}")
+        return jsonify({"error": "Failed to fetch guesses"}), 500
+    finally:
+        if connection:
+            curs.close()
+            connection.close()
+
+
 if __name__ == '__main__':
     app.run(debug=True)

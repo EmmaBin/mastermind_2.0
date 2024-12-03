@@ -16,7 +16,9 @@ export default function NewGame() {
     const [stopTimer, setStopTimer] = React.useState(false)
     const [showHints, setShowHints] = React.useState(false)
     const [hintsResult, setHintsResult] = React.useState(null);
+    const [gameHistory, setGameHistory] = React.useState([])
     const { gameId } = useParams();
+
     //after each guess:1. check against secret code: correct -> end game, redirect, delete storage, send date to backend
     //                                               wrong   -> if still can going, feedback, if can't going, redirect, delete storage, send date to backend
 
@@ -29,7 +31,44 @@ export default function NewGame() {
             setSecretCode(storedSecretCode);
             console.log("here is secret code", secretCode);
         }
+        fetchGameHistory();
     }, [secretCode, difficulty]);
+
+    async function fetchGameHistory() {
+        try {
+            const response = await fetch(`/game/${gameId}/guesses`, { method: 'GET' });
+            if (response.ok) {
+                const data = await response.json();
+                setGameHistory(data);
+            } else {
+                console.error("Failed to fetch game history:", response.status);
+            }
+        } catch (error) {
+            console.error("Network error while fetching game history:", error);
+        }
+    }
+
+    async function saveGuessToDB(guess, correctNumber, correctLocation) {
+        const payload = {
+            guess: guess.join(""),
+            correctNumbers: correctNumber,
+            correctLocations: correctLocation,
+        };
+
+        try {
+            const response = await fetch(`/game/${gameId}/guesses`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+                console.error("Error saving guess to server:", response.status);
+            }
+        } catch (error) {
+            console.error("Network error while saving guess:", error);
+        }
+    }
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -39,8 +78,16 @@ export default function NewGame() {
         if (currentGuess.length === difficulty) {
             setCurrentRound((prev) => prev + 1)
             const { correctNumber, correctLocation } = checkAgainstCodes(currentGuess, secretCode)
+            //send each uer guess to server, and read user's guess, correctNumber, correctLocation to display in the table
+
+            setGameHistory((prev) => [
+                ...prev,
+                { guessedNumber: currentGuess.join(""), correctNumber, correctLocation },
+            ]);
+
+            saveGuessToDB(currentGuess, correctNumber, correctLocation);
             checkWinningCondition(correctLocation)
-            return ({ correctLocation, correctNumber })
+
         }
     }
 
@@ -149,6 +196,32 @@ export default function NewGame() {
                 difficulty={difficulty}
                 handleSubmit={handleSubmit}
                 stillGoing={stillGoing} />
+
+            {gameHistory.length > 0 ? (
+                <table border="1" style={{ borderCollapse: "collapse", width: "5%", marginTop: "20px" }}>
+                    <thead>
+                        <tr>
+                            <th>Your guess</th>
+                            <th>Correct Location</th>
+                            <th>Correct Number</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {gameHistory.map((entry, i) => (
+                            <tr key={i}>
+                                <td>{entry.guessedNumber}</td>
+                                <td>{entry.correctLocation}</td>
+                                <td>{entry.correctNumber}</td>
+                            </tr>
+
+                        ))}
+                    </tbody>
+
+                </table>
+            ) : (
+                <p>Loading your game history!</p>
+            )}
 
 
 
