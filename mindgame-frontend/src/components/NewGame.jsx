@@ -169,11 +169,12 @@ export default function NewGame() {
     }
 
     function endGame() {
+        setStopTimer(true)
         setStillGoing(false)
         setCurrentRound(-1)
-        setStopTimer(true)
         localStorage.removeItem('secret_code');
         localStorage.removeItem('difficulty');
+        localStorage.removeItem('elapsedTime');
 
     }
 
@@ -189,13 +190,18 @@ export default function NewGame() {
         }
 
 
+
     }
+
+
 
     return (
         <div>
             <Timer />
             <br></br>
-            <button onClick={() => navigate("/game")}>Go back to game setting to restart game</button>
+            <button onClick={() => {
+                navigate('/game');
+            }}>Go back to game setting to restart game</button>
             <button onClick={displayHints}>{showHints ? "Hide Hints" : "Hints"}</button>
             {showHints && hintsResult && (
                 <div>
