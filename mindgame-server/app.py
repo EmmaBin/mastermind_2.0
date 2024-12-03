@@ -340,5 +340,16 @@ def get_guesses(game_id):
             connection.close()
 
 
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    try:
+        logout_user()
+        return jsonify({"message": "The User logged out successfully"}), 200
+    except Exception as e:
+        print(f"Error during logout: {e}")
+        return jsonify({"error": "Logout failed. Please try again later."}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)

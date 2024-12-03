@@ -124,7 +124,7 @@ export default function NewGame() {
                 if (response.ok) {
                     alert("Yay! You won the game!");
                     endGame();
-                    setTimeout(() => navigate('/game'), 5000);
+                    setTimeout(() => navigate('/game'), 3000);
                 } else {
                     alert("Failed to update game state on the server. Please try again.");
                 }
