@@ -4,13 +4,16 @@ import '../App.css';
 export default function EachInput({ difficulty, handleSubmit, stillGoing }) {
 
     const isDisabled = !stillGoing
-
+    const formRef = React.useRef(null);
 
 
     function handleGuess(e) {
         e.preventDefault();
 
         handleSubmit(e);
+        if (formRef.current) {
+            formRef.current.reset();
+        }
 
 
 
@@ -18,7 +21,7 @@ export default function EachInput({ difficulty, handleSubmit, stillGoing }) {
     }
     return (
         <div className='form'>
-            <form onSubmit={handleGuess}>
+            <form onSubmit={handleGuess} ref={formRef}>
                 <label>Input your guess:</label>
                 {Array.from({ length: difficulty }, (_, i) => <input key={i} type="number" className="inputField" min={0} max={9} name={i} required disabled={isDisabled} />)
                 }
