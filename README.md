@@ -3,12 +3,6 @@
 ## Overview
 MindGame 2.0 is a number guessing game where players must guess a sequence of random numbers within 10 attempts. The game generates a sequence of random numbers, which can repeat, and challenges the player to guess the correct numbers and their positions.
 
-- The game generates 4/5/6 random numbers between 0 and 9 based on user's selection.
-- The user has 10 attempts to guess the sequence.
-- The numbers may repeat in the sequence.
-- Feedback is provided after each guess to indicate correctness.
-- The game ends if the user guesses the sequence or exhausts all attempts.
-
 ---
 ### Code Structure
 I built this game as a Full-Stack Web Application utilizing the Model-View-Controller architecture.
@@ -99,7 +93,7 @@ Then, you can have backend running.
   python app.py
 ```
 
-Go to the Frontend Directory
+Go to the Frontend Directory. The app will be served on http://localhost:3000 (default port).
 ```bash
   cd mindgame-frontend
 ```
@@ -121,7 +115,9 @@ Start the Development Server
 ```bash
   npm start
 ```
-The app will be served on http://localhost:3000 (default port).
+
+
+
 ---
 ## Technologies Used
 <ul>
@@ -198,15 +194,13 @@ The app will be served on http://localhost:3000 (default port).
 - Users can customize the number of random numbers to guess: **4, 5, or 6**.
 - Flexible range for generated random numbers: **from 0 to 9**.
 - A timer is available for each game.
+- Display remaining rounds.
 - **Hints** can be displayed during gameplay.
 - Supports **multi-player functionality**, allowing users to:
   - Log in with individual accounts.
   - Play their own games.
   - Track progress and feedback.
-- User history tracking, including:
-  - **Least time spent** 
-  - **Most wins** 
-  - **Fewest guesses** 
+- User history tracking, including least time spent, most wins and least guesses.
 
 ## Sample Play
 Example:  
