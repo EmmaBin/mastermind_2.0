@@ -57,32 +57,35 @@ export default function Login() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="userEmail">Enter your email:</label>
-            <input
-                id="userEmail"
-                type="email"
-                name="userEmail"
-                value={loginForm.userEmail}
-                onChange={handleInput}
-                required
-            />
+        <div className='form-container'>
+            <form onSubmit={handleSubmit} className='form'>
+                <label htmlFor="userEmail">Enter your email:</label>
+                <input
+                    id="userEmail"
+                    type="email"
+                    name="userEmail"
+                    value={loginForm.userEmail}
+                    onChange={handleInput}
+                    required
+                />
 
-            <label htmlFor="userPassword">Enter your password:</label>
-            <input
-                id="userPassword"
-                type="password"
-                name="userPassword"
-                value={loginForm.userPassword}
-                onChange={handleInput}
-                required
-            />
+                <label htmlFor="userPassword">Enter your password:</label>
+                <input
+                    id="userPassword"
+                    type="password"
+                    name="userPassword"
+                    value={loginForm.userPassword}
+                    onChange={handleInput}
+                    required
+                />
 
-            <button type="submit">Login</button>
+                <button type="submit">Login</button>
 
-            <p>
-                New User? <Link to="/register">Register here</Link>
-            </p>
-        </form>
+                <p>
+                    New User? <Link to="/register">Register here</Link>
+                </p>
+            </form>
+        </div>
+
     );
 }

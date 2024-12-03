@@ -51,43 +51,47 @@ export default function Register() {
 
     }
     return (
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="userName" >Enter your username:</label>
-            <input
-                id="userName"
-                type="text"
-                name="userName"
-                value={registerForm.userName}
-                onChange={handleInput}
-                required
-            />
+        <div className="form-container">
+            <form onSubmit={handleSubmit} className="form">
+                <label htmlFor="userName" >Enter your username:</label>
+                <input
+                    id="userName"
+                    type="text"
+                    name="userName"
+                    value={registerForm.userName}
+                    onChange={handleInput}
+                    required
+                />
 
-            <label htmlFor="userEmail">Enter your email:</label>
-            <input
-                id="userEmail"
-                type="email"
-                name="userEmail"
-                value={registerForm.userEmail}
-                onChange={handleInput}
-                required
-            />
+                <label htmlFor="userEmail">Enter your email:</label>
+                <input
+                    id="userEmail"
+                    type="email"
+                    name="userEmail"
+                    value={registerForm.userEmail}
+                    onChange={handleInput}
+                    required
+                />
 
-            <label htmlFor="userPassword">Enter your password:</label>
-            <input
-                id="userPassword"
-                type="password"
-                name="userPassword"
-                value={registerForm.userPassword}
-                onChange={handleInput}
-                required
-            />
+                <label htmlFor="userPassword">Enter your password:</label>
+                <input
+                    id="userPassword"
+                    type="password"
+                    name="userPassword"
+                    value={registerForm.userPassword}
+                    onChange={handleInput}
+                    required
+                />
 
-            <button type="submit">Register</button>
+                <button type="submit">Register</button>
 
-            <p>
-                Already Registered? <Link to="/login">Login here</Link>
-            </p>
-        </form>
+                <p>
+                    Already Registered? <Link to="/login">Login here</Link>
+                </p>
+            </form>
+        </div>
+
+
 
 
     )
