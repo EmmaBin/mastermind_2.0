@@ -56,10 +56,28 @@ export default function GameSetting() {
         <div>
             <form onSubmit={startGame}>
                 <label htmlFor='level'> Pick your Difficulty Level:</label>
-                <div id="level" className='level-btns'>
-                    <button type="button" onClick={() => setDifficulty("4")}>Easy</button>
-                    <button type="button" onClick={() => setDifficulty("5")}>Medium</button>
-                    <button type="button" onClick={() => setDifficulty("6")}>Hard</button>
+                <div id="level" className="level-btns">
+                    <button
+                        type="button"
+                        className={difficulty === "4" ? "selected" : ""}
+                        onClick={() => setDifficulty("4")}
+                    >
+                        Easy
+                    </button>
+                    <button
+                        type="button"
+                        className={difficulty === "5" ? "selected" : ""}
+                        onClick={() => setDifficulty("5")}
+                    >
+                        Medium
+                    </button>
+                    <button
+                        type="button"
+                        className={difficulty === "6" ? "selected" : ""}
+                        onClick={() => setDifficulty("6")}
+                    >
+                        Hard
+                    </button>
                 </div>
 
                 <label htmlFor="startNum"> Number Starts: </label>

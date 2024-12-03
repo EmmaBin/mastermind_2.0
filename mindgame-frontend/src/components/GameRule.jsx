@@ -3,10 +3,11 @@ export default function GameRule() {
         <div className="rule">
             <h5>Game Objective</h5>
             <p>
-                The objective of the game is to guess a combination of <b>4, 5 or 6 numbers within 10 attempts.</b>
+                The objective of the game is to guess a combination of <b>4, 5 or 6 numbers</b>.
                 <br></br>
                 <br></br>
                 You will receive feedback after each guess, which can help you predict numbers for the next guess.
+                <br></br>
                 <br></br>
                 Numbers range from 0 to 9, and may include <b>repeated numbers</b>.
                 <br></br>
