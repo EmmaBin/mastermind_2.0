@@ -31,10 +31,11 @@ export default function NewGame() {
         }
 
         if (storedRound !== null) {
-            setCurrentRound(Number(storedRound)); // Use stored round value
+            setCurrentRound(Number(storedRound)); //use stored round value
         } else {
-            setCurrentRound(0); // Default to 0 if no value is stored
+            setCurrentRound(0); //default to 0 if no value is stored
         }
+        localStorage.removeItem('elapsedTime');
 
         const fetchGameHistory = async () => {
             try {
@@ -183,7 +184,7 @@ export default function NewGame() {
 
     return (
         <div>
-            <Timer stopTimer={stopTimer} reset={currentRound === 0} />
+            <Timer isGameActive={stillGoing} onGameEnd={endGame} />
             {currentRound !== null ? (
                 <p>
                     Remaining {10 - currentRound}{" "}
@@ -193,7 +194,10 @@ export default function NewGame() {
                 <p>Loading round data...</p>
             )}
             <br />
-            <button onClick={() => navigate('/game')} className='new-game-btn'>
+            <button onClick={() => {
+                localStorage.removeItem('elapsedTime');
+                navigate('/game')
+            }} className='new-game-btn'>
                 Back to game setting to restart game
             </button>
             <br />

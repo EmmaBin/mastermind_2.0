@@ -1,43 +1,45 @@
-import * as React from 'react';
-export default function Timer({ stopTimer, reset }) {
-    const [second, setSecond] = React.useState(() => {
-        if (reset) return 0;
+import React from 'react';
+
+export default function Timer({ isGameActive, onGameEnd }) {
+    const [seconds, setSeconds] = React.useState(() => {
         const savedTime = localStorage.getItem('elapsedTime');
         return savedTime ? parseInt(savedTime, 10) : 0;
     });
 
     React.useEffect(() => {
-        if (reset) {
-            setSecond(0);
-            localStorage.setItem('elapsedTime', 0);
-        }
-    }, [reset]);
-
-    React.useEffect(() => {
         let timer;
 
-        if (stopTimer) {
-            clearInterval(timer);
-            localStorage.removeItem('elapsedTime');
-        } else {
+        if (isGameActive) {
             timer = setInterval(() => {
-                setSecond((prev) => {
+                setSeconds((prev) => {
                     const newTime = prev + 1;
                     localStorage.setItem('elapsedTime', newTime);
                     return newTime;
                 });
             }, 1000);
+        } else {
+            clearInterval(timer);
+            localStorage.removeItem('elapsedTime');
         }
 
         return () => clearInterval(timer);
-    }, [stopTimer]);
+    }, [isGameActive]);
 
-    const minute = Math.trunc(second / 60);
-    const remainingSeconds = second % 60;
+    React.useEffect(() => {
+        if (!isGameActive) {
+            onGameEnd();
+        }
+    }, [isGameActive, onGameEnd]);
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
 
     return (
         <div className="timer">
-            {String(minute).padStart(2, '0')} : {String(remainingSeconds).padStart(2, '0')}
+            {String(hours).padStart(2, '0')}:
+            {String(minutes).padStart(2, '0')}:
+            {String(remainingSeconds).padStart(2, '0')}
         </div>
     );
 }
