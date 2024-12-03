@@ -58,7 +58,7 @@ export default function Login() {
 
     return (
         <div className='form-container'>
-            <form onSubmit={handleSubmit} className='form'>
+            <form onSubmit={handleSubmit} className='form login-form'>
                 <label htmlFor="userEmail">Enter your email:</label>
                 <input
                     id="userEmail"

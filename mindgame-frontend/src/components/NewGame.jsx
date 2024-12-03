@@ -189,10 +189,7 @@ export default function NewGame() {
             setHintsResult(null);
         }
 
-
-
     }
-
 
 
     return (
@@ -201,8 +198,9 @@ export default function NewGame() {
             <br></br>
             <button onClick={() => {
                 navigate('/game');
-            }}>Go back to game setting to restart game</button>
-            <button onClick={displayHints}>{showHints ? "Hide Hints" : "Hints"}</button>
+            }} className='new-game-btn'>Back to game setting to restart game</button>
+            <br></br>
+            <button className='new-game-btn' onClick={displayHints}>{showHints ? "Hide Hints" : "Hints"}</button>
             {showHints && hintsResult && (
                 <div>
                     <p>1. Total: {hintsResult.total}</p>
@@ -214,35 +212,40 @@ export default function NewGame() {
                 difficulty={difficulty}
                 handleSubmit={handleSubmit}
                 stillGoing={stillGoing} />
+            <div className="game-history-container">
+                {gameHistory.length > 0 ? (
+                    <table className="game-history-table">
+                        <thead>
+                            <tr>
+                                <th>Your guess</th>
+                                <th>Correct Location</th>
+                                <th>Correct Number</th>
 
-            {gameHistory.length > 0 ? (
-                <table border="1" style={{ borderCollapse: "collapse", width: "5%", marginTop: "20px" }}>
-                    <thead>
-                        <tr>
-                            <th>Your guess</th>
-                            <th>Correct Location</th>
-                            <th>Correct Number</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {gameHistory.map((entry, i) => (
-                            <tr key={i}>
-                                <td>{entry.guess}</td>
-                                <td>{entry.correct_locations}</td>
-                                <td>{entry.correct_numbers}</td>
                             </tr>
-                        ))}
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            {gameHistory.map((entry, i) => (
+                                <tr key={i}>
+                                    <td>{entry.guess}</td>
+                                    <td>{entry.correct_locations}</td>
+                                    <td>{entry.correct_numbers}</td>
+                                </tr>
+                            ))}
+                        </tbody>
 
-                </table>
-            ) : (
-                <p>Loading your game history!</p>
-            )}
+                    </table>
+                ) : (
+                    <p>Your game history will be displayed here!</p>
+                )}
+            </div>
 
 
 
-        </div>
+
+
+
+
+        </div >
     );
 }
 
