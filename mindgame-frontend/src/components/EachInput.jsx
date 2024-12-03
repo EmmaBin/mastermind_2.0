@@ -3,7 +3,7 @@ import * as React from 'react';
 import '../App.css';
 export default function EachInput({ difficulty, handleSubmit, stillGoing }) {
 
-    const isDisabled = stillGoing
+    const isDisabled = !stillGoing
 
 
 

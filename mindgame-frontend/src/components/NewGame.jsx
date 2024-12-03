@@ -31,22 +31,29 @@ export default function NewGame() {
             setSecretCode(storedSecretCode);
             console.log("here is secret code", secretCode);
         }
-        fetchGameHistory();
-    }, [secretCode, difficulty]);
 
-    async function fetchGameHistory() {
-        try {
-            const response = await fetch(`/game/${gameId}/guesses`, { method: 'GET' });
-            if (response.ok) {
-                const data = await response.json();
-                setGameHistory(data);
-            } else {
-                console.error("Failed to fetch game history:", response.status);
+    }, []);
+
+    React.useEffect(() => {
+        const fetchGameHistory = async () => {
+            try {
+                const response = await fetch(`/game/${gameId}/guesses`, { method: 'GET' });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Game history fetched:", data);
+                    setGameHistory(data);
+                } else {
+                    console.error("Failed to fetch game history:", response.status);
+                }
+            } catch (error) {
+                console.error("Network error while fetching game history:", error);
             }
-        } catch (error) {
-            console.error("Network error while fetching game history:", error);
-        }
-    }
+        };
+
+        fetchGameHistory();
+    }, []); // Add gameId as a dependency
+
+
 
     async function saveGuessToDB(guess, correctNumber, correctLocation) {
         const payload = {
@@ -79,10 +86,14 @@ export default function NewGame() {
             setCurrentRound((prev) => prev + 1)
             const { correctNumber, correctLocation } = checkAgainstCodes(currentGuess, secretCode)
             //send each uer guess to server, and read user's guess, correctNumber, correctLocation to display in the table
-
+            const newGuess = {
+                guess: currentGuess.join(""),
+                correct_numbers: correctNumber,
+                correct_locations: correctLocation,
+            };
             setGameHistory((prev) => [
                 ...prev,
-                { guessedNumber: currentGuess.join(""), correctNumber, correctLocation },
+                newGuess,
             ]);
 
             saveGuessToDB(currentGuess, correctNumber, correctLocation);
@@ -210,11 +221,10 @@ export default function NewGame() {
                     <tbody>
                         {gameHistory.map((entry, i) => (
                             <tr key={i}>
-                                <td>{entry.guessedNumber}</td>
-                                <td>{entry.correctLocation}</td>
-                                <td>{entry.correctNumber}</td>
+                                <td>{entry.guess}</td>
+                                <td>{entry.correct_locations}</td>
+                                <td>{entry.correct_numbers}</td>
                             </tr>
-
                         ))}
                     </tbody>
 
