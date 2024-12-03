@@ -9,6 +9,36 @@ MindGame 2.0 is a number guessing game where players must guess a sequence of ra
 - Feedback is provided after each guess to indicate correctness.
 - The game ends if the user guesses the sequence or exhausts all attempts.
 
+---
+### Code Structure
+I built this game as a Full-Stack Web Application utilizing the Model-View-Controller architecture.
+The following sections describe the main directories and their responsibilities.
+
+## mindgame-frontend
+
+Contains files related to the frontend of the web application.
+
+- **Views**: The `src` folder contains React components and `App.css` for styling. These are bundled using Webpack and transpiled with Babel to ensure compatibility across various browsers before being served to the client.
+- **Main Features**:
+  - React-based components for dynamic rendering.
+  - Communication with the backend via RESTful APIs.
+  - State management to ensure responsiveness during gameplay.
+
+## mindgame-server
+
+Contains files related to the backend of the web application.
+
+### **Controllers**
+- `app.py`: The main Flask application that handles routing and processes requests.
+  - Functions in this file call **models** to interact with the database and transform data before sending a response to the client.
+
+### **Database**
+- `database.py`: Handles the connection to the **PostgreSQL** database using `psycopg2`.
+
+### **Models**
+- `scripts/init_db.sql`SQL tables for the database
+
+---
 ## Technologies Used
 <ul>
 <li>Python</li>
@@ -20,39 +50,6 @@ MindGame 2.0 is a number guessing game where players must guess a sequence of ra
 <li>RESTful Services</li>
 <li>JSON</li>
 </ul>
-
-### Code Structure
-I built this game as a Full-Stack Web Application utilizing the Model-View-Controller architecture.
-The following sections describe the main directories and their responsibilities.
-
-## mindgame-frontend
-
-Contains files related to the frontend of the web application.
-
-- **Views**: The `src` folder contains React components and `App.css` for styling. These are bundled using **Webpack** and transpiled with **Babel** to ensure compatibility across various browsers before being served to the client.
-- **Main Features**:
-  - React-based components for dynamic rendering.
-  - Communication with the backend via RESTful APIs.
-  - State management to ensure responsiveness during gameplay.
-
----
-
-## mindgame-server
-
-Contains files related to the backend of the web application.
-
-### **Controllers**
-- `app.py`: The main Flask application that handles routing and processes requests.
-  - Routes are defined for user authentication (`/register`, `/login`, `/logout`), gameplay management (`/new_game`, `/game/<game_id>/win`), and leaderboard (`/halloffame`).
-  - Functions in this file call **models** to interact with the database and transform data before sending a response to the client.
-
-### **Database**
-- `database.py`: Handles the connection to the **PostgreSQL** database using `psycopg2`.
-
-### **Models**
-- `scripts/init_db.sql`SQL tables for the database
-
----
 
 ## Endpoints:
 <table>
