@@ -199,9 +199,9 @@ Start the Development Server
 - **Hints** can be displayed during gameplay.
 - Supports **multi-player functionality**, allowing users to:
   - Log in with individual accounts.
-  <img src="images/register.png"/>
   - Play their own games.
   - Track progress and feedback.
+<img src="images/register.png"/>
 <img src="images/game_play.png"/>
 - User history tracking, including least time spent, most wins and least guesses.
 
