@@ -189,7 +189,7 @@ Start the Development Server
 ---
 
 ### Extensions
-- Users can customize the number of random numbers to guess: **4, 5, or 6**.
+- Users can customize the number of random numbers to guess: **4(easy), 5(medium), or 6(hard)**.
 - Flexible range for generated random numbers: **from 0 to 9**.
 <img src="images/different_setting.png"/>
 
@@ -198,18 +198,23 @@ Start the Development Server
 <img src="images/timer_and_remaining.png"/>
 
 - Hints can be displayed during gameplay.
-- Supports **multi-player functionality**, allowing users to:
+<img src="images/game_play.png"/>
+
+- Supports **multi-user functionality**, allowing users to:
   - Log in with individual accounts.
   - Play their own games.
   - Track progress and feedback.
 <img src="images/register.png"/>
-<img src="images/game_play.png"/>
+
+
 - User history tracking, including least time spent, most wins and least guesses.
+- Unittest for certain routes.
 
 ## Sample Play
 Example:  
-<img src="images/home.png"/>
-<img src="images/setting.png"/>
+<img src="images/setting_with_criteria.png"/>
+<img src="images/different_setting.png"/>
+<img src="images/gameplay.png"/>
 
 
 ---
