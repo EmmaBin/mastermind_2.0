@@ -46,12 +46,13 @@ def register():
     user_email = data.get("userEmail")
     print(f"**********{user_email}")
 
+    if not user_name or not user_password or not user_email:
+        return jsonify({"error": "Missing required fields"}), 400
+
     # inputs are invalid
     if len(user_name) > 50 or len(user_email) > 100 or len(user_password) > 25:
         return jsonify({"error": "Input exceeds maximum allowed length"}), 400
 
-    if not user_name or not user_password or not user_email:
-        return jsonify({"error": "Unable to register"}), 404
     try:
         connection = connect_with_db()
         curs = connection.cursor()
