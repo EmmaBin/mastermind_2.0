@@ -191,20 +191,25 @@ Start the Development Server
 ### Extensions
 - Users can customize the number of random numbers to guess: **4, 5, or 6**.
 - Flexible range for generated random numbers: **from 0 to 9**.
+<img src="images/different_setting.png"/>
+
 - A timer is available for each game.
 - Display remaining rounds.
+<img src="images/timer_and_remaining.png"/>
 - **Hints** can be displayed during gameplay.
 - Supports **multi-player functionality**, allowing users to:
   - Log in with individual accounts.
+  <img src="images/register.png"/>
   - Play their own games.
   - Track progress and feedback.
+<img src="images/game_play.png"/>
 - User history tracking, including least time spent, most wins and least guesses.
 
 ## Sample Play
 Example:  
 <img src="images/home.png"/>
 <img src="images/setting.png"/>
-<img src="images/game_play.png"/>
+
 
 ---
 
