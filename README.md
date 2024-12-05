@@ -60,7 +60,7 @@ To install virtualenv
 Create and activate virtual environment (virtualenv Windows)
 
 ```bash
-  python -m virtualenv venvpython
+  python -m virtualenv venv
   venv/Scripts/activate
 ```
 Create and activate virtual environment (virtualenv Linux)
