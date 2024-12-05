@@ -13,7 +13,7 @@ The following sections describe the main directories and their responsibilities.
 Contains files related to the frontend of the web application.
 
 ### **Views**
- The `src` folder contains React components and `App.css` for styling. These are bundled using Webpack and transpiled with Babel to ensure compatibility across various browsers before being served to the client.
+ Located in the `src` folder. These are bundled using Webpack and transpiled with Babel to ensure compatibility across various browsers before being served to the client.
 - Main Features:
   - React-based components for dynamic rendering.
   - Communication with the backend via RESTful APIs.
@@ -34,6 +34,10 @@ Contains files related to the backend of the web application.
 - `scripts/init_db.sql`SQL tables for the database
 
 ---
+### **Prerequisites**
+- Python >= 3.8
+- Node.js >= 16.x 
+- PostgreSQL >= 12.x
 
 ## How to Run Locally
 The game is using React for Front End and Python for backend.
@@ -56,13 +60,13 @@ To install virtualenv
 Create and activate virtual environment (virtualenv Windows)
 
 ```bash
-  virtualenv venv
-  source venv/Scripts/activate
+  python -m virtualenv venvpython
+  venv/Scripts/activate
 ```
 Create and activate virtual environment (virtualenv Linux)
 
 ```bash
-  virtualenv venv
+  python3 -m virtualenv venv
   source venv/bin/activate
 ```
 Install requirements
@@ -126,6 +130,7 @@ Start the Development Server
 <li>Psycopg2</li>
 <li>Flask-Login</li>
 <li>RESTful Services</li>
+<li>Unittest</li>
 <li>JSON</li>
 </ul>
 
@@ -208,7 +213,7 @@ Start the Development Server
 
 
 - User history tracking, including least time spent, most wins and least guesses.
-- Unittest for certain routes.
+- Unittest for certain route.
 
 ## Sample Play
 Example:  

@@ -1,4 +1,6 @@
 # test cases for /register
+from app import app, generate_random
+from unittest.mock import patch, MagicMock
 from app import app
 import unittest
 from unittest.mock import patch
@@ -45,3 +47,7 @@ class TestRegisterEndpoint(unittest.TestCase):
         response = self.client.post('/register', json={})
         self.assertEqual(response.status_code, 400)
         self.assertIn("Missing required fields", response.get_json()["error"])
+
+
+if __name__ == "__main__":
+    unittest.main()
