@@ -23,3 +23,4 @@ CREATE TABLE GameGuesses (
     correct_locations INT NOT NULL,
     FOREIGN KEY (game_id) REFERENCES Game(id) ON DELETE CASCADE
 );
+

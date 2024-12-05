@@ -9,7 +9,6 @@ import getHints from '../utils/gethints';
 
 export default function NewGame() {
     const navigate = useNavigate();
-    const [currentRound, setCurrentRound] = React.useState(null);
     const [difficulty, setDifficulty] = React.useState(null);
     const [stillGoing, setStillGoing] = React.useState(true);
     const [secretCode, setSecretCode] = React.useState("");
@@ -18,23 +17,19 @@ export default function NewGame() {
     const [hintsResult, setHintsResult] = React.useState(null);
     const [gameHistory, setGameHistory] = React.useState([]);
     const { gameId } = useParams();
-
+    let currentRound = gameHistory.length
     React.useEffect(() => {
+
+
         const storedDifficulty = localStorage.getItem('difficulty');
         const storedSecretCode = localStorage.getItem("secret_code")
-        const storedRound = localStorage.getItem("currentRound");
-
         if (storedDifficulty && storedSecretCode) {
             setDifficulty(Number(storedDifficulty));
             setSecretCode(storedSecretCode);
-            console.log("here is secret code", secretCode);
+
         }
 
-        if (storedRound !== null) {
-            setCurrentRound(Number(storedRound)); //use stored round value
-        } else {
-            setCurrentRound(0); //default to 0 if no value is stored
-        }
+
         localStorage.removeItem('elapsedTime');
 
         const fetchGameHistory = async () => {
@@ -54,11 +49,7 @@ export default function NewGame() {
         fetchGameHistory();
     }, [gameId]);
 
-    React.useEffect(() => {
-        if (currentRound !== null) {
-            localStorage.setItem('currentRound', currentRound);
-        }
-    }, [currentRound]);
+
 
     async function saveGuessToDB(guess, correctNumber, correctLocation) {
         const payload = {
@@ -89,7 +80,7 @@ export default function NewGame() {
 
         if (currentGuess.length === difficulty) {
             const updatedRound = currentRound + 1;
-            setCurrentRound(updatedRound);
+
 
             const { correctNumber, correctLocation } = checkAgainstCodes(currentGuess, secretCode);
 
@@ -162,11 +153,9 @@ export default function NewGame() {
     function endGame() {
         setStopTimer(true);
         setStillGoing(false);
-        setCurrentRound(0);
         localStorage.removeItem('secret_code');
         localStorage.removeItem('difficulty');
         localStorage.removeItem('elapsedTime');
-        localStorage.removeItem('currentRound');
     }
 
     function displayHints() {
@@ -185,14 +174,8 @@ export default function NewGame() {
     return (
         <div>
             <Timer isGameActive={stillGoing} onGameEnd={endGame} />
-            {currentRound !== null ? (
-                <p>
-                    Remaining {10 - currentRound}{" "}
-                    {10 - currentRound === 1 ? "round" : "rounds"}
-                </p>
-            ) : (
-                <p>Loading round data...</p>
-            )}
+            {<p>Remaining {10 - currentRound}</p>}
+
             <br />
             <button onClick={() => {
                 localStorage.removeItem('elapsedTime');
@@ -243,3 +226,7 @@ export default function NewGame() {
         </div>
     );
 }
+
+
+
+

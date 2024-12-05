@@ -8,7 +8,6 @@ export default function Timer({ isGameActive, onGameEnd }) {
 
     React.useEffect(() => {
         let timer;
-
         if (isGameActive) {
             timer = setInterval(() => {
                 setSeconds((prev) => {
