@@ -196,7 +196,8 @@ Start the Development Server
 - A timer is available for each game.
 - Display remaining rounds.
 <img src="images/timer_and_remaining.png"/>
-- **Hints** can be displayed during gameplay.
+
+- Hints can be displayed during gameplay.
 - Supports **multi-player functionality**, allowing users to:
   - Log in with individual accounts.
   - Play their own games.
